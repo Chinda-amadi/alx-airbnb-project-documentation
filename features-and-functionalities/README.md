@@ -1,163 +1,238 @@
-Airbnb Clone Backend Architecture -
+# Airbnb Clone Backend Architecture -
+
+## 🔐 1. User Management Module
+
+#### Entities:
+
+    - User,
+    
+    - Profile
+
+#### Features:
+
+    - Registration (Guest/Host)
+    
+    - Login (Email/Password, OAuth)
+    
+    - JWT Authentication
+    
+    - Profile updates (photo, contact info, preferences)
+    
+    - Endpoints: /register, /login, /profile
+    
+    - Dependencies: Auth service, file storage
+    
+## 🏠 2. Property Listings Module
+
+#### Entities:
+
+    - Property,
+    
+    - Availability,
+    
+    - Amenities
+
+#### Features:
+
+    - Add/Edit/Delete Listings
+    
+    - Upload images
+    
+    - Set availability
+    
+    - Endpoints: /properties, /properties/:id/images
+    
+    - Dependencies: Auth, file storage
+
+## 🔍 3. Search & Filtering Module
 
-🔐 1. User Management Module
-Entities: User, Profile
+#### Entities:
+
+    - SearchQuery
+
+#### Features:
+
+    - Filter by location, price, guests, amenities
+    
+    - Pagination
+    
+    - Endpoints: /search
+    
+    -Dependencies: Property module, caching (Redis)
+
+## 📅 4. Booking Management Module
 
-Features:
+Entities:
+    - Booking,
+    
+    - BookingStatus
 
-Registration (Guest/Host)
+#### Features:
 
-Login (Email/Password, OAuth)
+    - Create/Cancel bookings
+    
+    - Prevent double bookings
+    
+    - Track status (pending, confirmed, canceled, completed)
+    
+    - Endpoints: /bookings, /bookings/:id
+    
+    -Dependencies: Property, User, Calendar service
 
-JWT Authentication
+## 💳 5. Payment Integration Module
 
-Profile updates (photo, contact info, preferences)
+#### Entities:
+    - Payment,
+    - Payout
 
-Endpoints: /register, /login, /profile
+#### Features:
 
-Dependencies: Auth service, file storage
+    - Stripe/PayPal integration
+    
+    - Guest payments
+    
+    - Host payouts
+    
+    - Multi-currency support
+    
+    -Endpoints: /payments, /payouts
+    
+    - Dependencies: Booking module, external payment gateway
 
-🏠 2. Property Listings Module
-Entities: Property, Availability, Amenities
+## ⭐ 6. Reviews & Ratings Module
 
-Features:
+#### Entities:
 
-Add/Edit/Delete Listings
+    - Review,
+    
+    - Rating
 
-Upload images
+#### Features:
 
-Set availability
+    - Submit reviews
+    
+    - Host responses
+    
+    - Link reviews to bookings
+    
+    - Endpoints: /reviews, /properties/:id/reviews
+    
+    - Dependencies: Booking, User
 
-Endpoints: /properties, /properties/:id/images
+## 🔔 7. Notifications Module
 
-Dependencies: Auth, file storage
+#### Entities:
 
-🔍 3. Search & Filtering Module
-Entities: SearchQuery
+    - Notification
 
-Features:
+#### Features:
 
-Filter by location, price, guests, amenities
+    - Email & in-app alerts
+    
+    - Booking/payment updates
+    
+    - Endpoints: /notifications
+    
+    - Dependencies: Email service (SendGrid/Mailgun)
 
-Pagination
+## 🛠 8. Admin Dashboard Module
 
-Endpoints: /search
+#### Entities:
 
-Dependencies: Property module, caching (Redis)
+    - Admin,
+    
+    - AuditLog
 
-📅 4. Booking Management Module
-Entities: Booking, BookingStatus
+#### Features:
 
-Features:
+    - Manage users,
+    
+    - listings,
+    
+    - bookings,
+    
+    - payments
+    
+    - View analytics
 
-Create/Cancel bookings
+#### Endpoints: /admin/*
 
-Prevent double bookings
+#### Dependencies:
 
-Track status (pending, confirmed, canceled, completed)
+- All modules,
 
-Endpoints: /bookings, /bookings/:id
+- RBAC
 
-Dependencies: Property, User, Calendar service
+## ⚙️ Technical Requirements Layer
 
-💳 5. Payment Integration Module
-Entities: Payment, Payout
+#### Database: PostgreSQL or MySQL
 
-Features:
+#### Tables:
 
-Stripe/PayPal integration
+    - Users,
+    
+    - Properties,
+    
+    - Bookings,
+    
+    - Payments,
+    
+    - Reviews
 
-Guest payments
+#### API: RESTful (with optional GraphQL)
 
-Host payouts
+#### Methods:
 
-Multi-currency support
+    - GET,
+    
+    - POST,
+    
+    - PUT/PATCH,
+    
+    - DELETE
 
-Endpoints: /payments, /payouts
+#### Auth: JWT + RBAC
 
-Dependencies: Booking module, external payment gateway
+#### File Storage: AWS S3 or Cloudinary
 
-⭐ 6. Reviews & Ratings Module
-Entities: Review, Rating
+#### Third-Party Services:
 
-Features:
+- Email,
 
-Submit reviews
+- Payments
 
-Host responses
+#### Error Handling:
 
-Link reviews to bookings
+- Global middleware
 
-Endpoints: /reviews, /properties/:id/reviews
+#### Logging:
 
-Dependencies: Booking, User
+- Centralized logging service
 
-🔔 7. Notifications Module
-Entities: Notification
+## 📈 Non-Functional Requirements Layer
 
-Features:
+#### Scalability:
 
-Email & in-app alerts
+    - Modular architecture
+    
+    - Load balancers
+    
+#### Security:
 
-Booking/payment updates
+    - Data encryption
+    
+    - Firewalls,
+    
+    - rate limiting
+    
+#### Performance:
 
-Endpoints: /notifications
+    - Redis caching
+    
+    - Optimized queries
+    
+#### Testing:
 
-Dependencies: Email service (SendGrid/Mailgun)
-
-🛠 8. Admin Dashboard Module
-Entities: Admin, AuditLog
-
-Features:
-
-Manage users, listings, bookings, payments
-
-View analytics
-
-Endpoints: /admin/*
-
-Dependencies: All modules, RBAC
-
-⚙️ Technical Requirements Layer
-Database: PostgreSQL or MySQL
-
-Tables: Users, Properties, Bookings, Payments, Reviews
-
-API: RESTful (with optional GraphQL)
-
-Methods: GET, POST, PUT/PATCH, DELETE
-
-Auth: JWT + RBAC
-
-File Storage: AWS S3 or Cloudinary
-
-Third-Party Services: Email, Payments
-
-Error Handling: Global middleware
-
-Logging: Centralized logging service
-
-📈 Non-Functional Requirements Layer
-Scalability:
-
-Modular architecture
-
-Load balancers
-
-Security:
-
-Data encryption
-
-Firewalls, rate limiting
-
-Performance:
-
-Redis caching
-
-Optimized queries
-
-Testing:
-
-Unit & integration tests (pytest)
-
-Automated API testing
+    - Unit & integration tests (pytest)
+    
+    -Automated API testing

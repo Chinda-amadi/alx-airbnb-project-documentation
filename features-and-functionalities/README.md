@@ -74,11 +74,11 @@
     
     - Prevent double bookings
     
-    - Track status (pending, confirmed, canceled, completed)
+     Track status (pending, confirmed, canceled, completed)
     
-    - Endpoints: /bookings, /bookings/:id
+     Endpoints: /bookings, /bookings/:id
     
-    -Dependencies: Property, User, Calendar service
+    Dependencies: Property, User, Calendar service
 
 ## 💳 5. Payment Integration Module
 

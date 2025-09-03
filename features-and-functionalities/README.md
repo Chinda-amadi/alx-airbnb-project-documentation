@@ -62,7 +62,8 @@
 
 ## 📅 4. Booking Management Module
 
-Entities:
+#### Entities:
+
     - Booking,
     
     - BookingStatus

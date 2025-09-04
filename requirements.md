@@ -81,11 +81,16 @@ specifications, validation rules, and performance criteria.
 - Output (200 OK):
 
 **json**
-**{**
-  **"accessToken": "jwt.token.here",**
-  **"refreshToken": "jwt.refresh.token",**
-  **"expiresIn": 3600**
-**}**
+
+  {
+  
+    "accessToken": "jwt.token.here",
+  
+    "refreshToken": "jwt.refresh.token",
+  
+    "expiresIn": 3600
+  
+  }
 
 - Validation Rules:
 
@@ -108,11 +113,16 @@ specifications, validation rules, and performance criteria.
 - Output (200 OK):
 
 **json**
-**{**
-  **"accessToken": "new.jwt.token",**
-  **"refreshToken": "rotated.jwt.refresh",**
-  **"expiresIn": 3600**
-**}**
+
+  {
+  
+    "accessToken": "new.jwt.token",
+  
+    "refreshToken": "rotated.jwt.refresh",
+  
+    "expiresIn": 3600
+  
+  }
 
 - Validation Rules:
 
@@ -181,15 +191,24 @@ specifications, validation rules, and performance criteria.
 - Output (200 OK):
 
 **json**
-**{**
-  **"properties": [ { /* property object */ } ],**
-  **"pagination": {**
-    **"page": 1,**
-    **"pageSize": 20,**
-    **"totalPages": 50,**
-    **"totalCount": 1000**
-  **}**
-**}**
+
+  {
+  
+    "properties": [ { /* property object */ } ],
+  
+    "pagination": {
+  
+      "page": 1,
+  
+      "pageSize": 20,
+  
+      "totalPages": 50,
+  
+      "totalCount": 1000
+  
+    }
+  
+  }
 
 - Validation Rules:
 
@@ -212,11 +231,16 @@ specifications, validation rules, and performance criteria.
 - Output (201 Created):
 
 **json**
-**{**
-  **"propertyId": "uuid",**
-  **"ownerId": "uuid",**
-  **"createdAt": "2025-08-31T22:05:00Z"**
-**}**
+
+  {
+  
+    "propertyId": "uuid",
+  
+    "ownerId": "uuid",
+  
+    "createdAt": "2025-08-31T22:05:00Z"
+  
+  }
 
 - Validation Rules:
 
@@ -291,13 +315,20 @@ specifications, validation rules, and performance criteria.
 - Output (201 Created):
 
 **json**
-**{**
-  **"bookingId": "uuid",**
-  **"status": "CONFIRMED",**
-  **"totalPrice": 350.00,**
-  **"currency": "USD",**
-  **"createdAt": "2025-08-31T22:10:00Z"**
-**}**
+
+  {
+  
+    "bookingId": "uuid",
+  
+    "status": "CONFIRMED",
+  
+    "totalPrice": 350.00,
+  
+    "currency": "USD",
+  
+    "createdAt": "2025-08-31T22:10:00Z"
+  
+  }
 
 - Validation Rules:
 

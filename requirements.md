@@ -11,7 +11,7 @@ This document outlines detailed requirements for three core backend features:
 Each section covers functional behavior, API endpoints with input/output
 
 specifications, validation rules, and performance criteria.
----------------------------------------------------------------------------------------------------------------------
+
 
 ## 1. User Authentication:
 
@@ -45,11 +45,11 @@ specifications, validation rules, and performance criteria.
 - Output (201 Created):
 
 **json**
-**{**
-  **"userId": "uuid",**
-  **"email": "user@example.com",**
-  **"createdAt": "2025-08-31T22:00:00Z"**
-**}**
+  {
+    "userId": "uuid",
+    "email": "user@example.com",
+    "createdAt": "2025-08-31T22:00:00Z"
+  }
 
 - Validation Rules:
 

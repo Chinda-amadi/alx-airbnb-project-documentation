@@ -1,19 +1,23 @@
-Convert Your Use Case Diagram to User Stories - 
+# Convert Your Use Case Diagram to User Stories - 
 
-Objective: Translate use case diagram interactions into user stories.
+# Objective: Translate use case diagram interactions into user stories.
 
-Instructions:
+## Instructions:
 
-Using the use case diagram from Task 1, convert each use case into a relevant user story. Example: “As a user, I want to be able to register an account so that I can list my properties.”
+- Using the use case diagram from Task 1, convert each use case into a relevant user story.
 
-Write at least 5 user stories that capture the core interactions from the use case diagram.
+  Example: “As a user, I want to be able to register an account so that I can list my properties.”
+  
+- Write at least 5 user stories that capture the core interactions from the use case diagram.
 
-Create a file named user-stories.md in the directory user-stories/ within your GitHub repository alx-airbnb-project-documentation and document your user stories there.
+- Create a file named user-stories.md in the directory user-stories/ within your GitHub repository
+  
+  alx-airbnb-project-documentation and document your user stories there.
+  
+- Commit and push the changes to your GitHub repository
 
-Commit and push the changes to your GitHub repository
+**Repo:**
 
-Repo:
-
-GitHub repository: alx-airbnb-project-documentation
-Directory: user-stories/
-File: user-stories.md,README.md
+    - GitHub repository: alx-airbnb-project-documentation
+    - Directory: user-stories/
+    - File: user-stories.md,README.md

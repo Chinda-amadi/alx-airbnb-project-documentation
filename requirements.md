@@ -1,319 +1,357 @@
-Technical and Functional Requirements Specification.
+# Technical and Functional Requirements Specification.
 
 This document outlines detailed requirements for three core backend features:
-User Authentication,
-Property Management, and
-Booking System.
 
-Each section covers functional behavior, API endpoints with input/output specifications, validation rules, and performance criteria.
+- **User Authentication,**
 
-1. User Authentication:
+- **Property Management, and**
 
-1.1 Functional Requirements
-Allow new users to register with email and password.
+- **Booking System.**
 
-Enable existing users to log in and receive access tokens.
+Each section covers functional behavior, API endpoints with input/output
 
-Support token refresh without re-entering credentials.
+specifications, validation rules, and performance criteria.
+---------------------------------------------------------------------------------------------------------------------
 
-Securely log out and invalidate refresh tokens.
+## 1. User Authentication:
 
-1.2 Technical Requirements
-JWT-based access and refresh tokens.
+### 1.1 Functional Requirements
 
-Passwords hashed with bcrypt (cost factor ≥12).
+- Allow new users to register with email and password.
 
-HTTPS enforced for all auth endpoints.
+- Enable existing users to log in and receive access tokens.
 
-Rate limiting on login and registration: max 5 attempts per IP per hour.
+- Support token refresh without re-entering credentials.
 
-1.3 API Endpoints
-1.3.1 POST /api/auth/register
-Description: Create a new user account.
+- Securely log out and invalidate refresh tokens.
 
-Input (application/json):
+### 1.2 Technical Requirements
 
-Output (201 Created):
+- JWT-based access and refresh tokens.
 
-json
-{
-  "userId": "uuid",
-  "email": "user@example.com",
-  "createdAt": "2025-08-31T22:00:00Z"
-}
-Validation Rules:
+- Passwords hashed with bcrypt (cost factor ≥12).
 
-email must match RFC5322 regex.
+- HTTPS enforced for all auth endpoints.
 
-password length and complexity.
+- Rate limiting on login and registration: max 5 attempts per IP per hour.
 
-fullName non-empty.
+### 1.3 API Endpoints
 
-email uniqueness in users table.
+#### 1.3.1 POST /api/auth/register
 
-Performance Criteria:
+- Description: Create a new user account.
 
-95th percentile response time < 200 ms.
+- Input (application/json):
+- Output (201 Created):
 
-Support 200 registrations/minute with horizontal scaling.
+**json**
+**{**
+  **"userId": "uuid",**
+  **"email": "user@example.com",**
+  **"createdAt": "2025-08-31T22:00:00Z"**
+**}**
 
-1.3.2 POST /api/auth/login
-Description: Authenticate user and issue tokens.
+- Validation Rules:
 
-Input:
+  - email must match RFC5322 regex.
+  
+  - password length and complexity.
+  
+  - fullName non-empty.
+  
+  - email uniqueness in users table.
+  
+- Performance Criteria:
 
-Output (200 OK):
+  - 95th percentile response time < 200 ms.
+  
+  - Support 200 registrations/minute with horizontal scaling.
 
-json
-{
-  "accessToken": "jwt.token.here",
-  "refreshToken": "jwt.refresh.token",
-  "expiresIn": 3600
-}
-Validation Rules:
+#### 1.3.2 POST /api/auth/login
 
-Credentials match stored hash.
+- Description: Authenticate user and issue tokens.
 
-Account not locked or suspended.
+- Input:
 
-Performance Criteria:
+- Output (200 OK):
 
-95th percentile response time < 150 ms.
+**json**
+**{**
+  **"accessToken": "jwt.token.here",**
+  **"refreshToken": "jwt.refresh.token",**
+  **"expiresIn": 3600**
+**}**
 
-Handle 500 logins/minute under peak load.
+- Validation Rules:
 
-1.3.3 POST /api/auth/refresh
-Description: Rotate refresh token and issue new access token.
+  - Credentials match stored hash.
+  
+  - Account not locked or suspended.
 
-Input:
+- Performance Criteria:
 
-Output (200 OK):
+  - 95th percentile response time < 150 ms.
+  
+  - Handle 500 logins/minute under peak load.
 
-json
-{
-  "accessToken": "new.jwt.token",
-  "refreshToken": "rotated.jwt.refresh",
-  "expiresIn": 3600
-}
-Validation Rules:
+#### 1.3.3 POST /api/auth/refresh
 
-refreshToken signature valid.
+- Description: Rotate refresh token and issue new access token.
 
-refreshToken not revoked.
+- Input:
 
-Performance Criteria:
+- Output (200 OK):
 
-95th percentile response time < 100 ms.
+**json**
+**{**
+  **"accessToken": "new.jwt.token",**
+  **"refreshToken": "rotated.jwt.refresh",**
+  **"expiresIn": 3600**
+**}**
 
-1.3.4 POST /api/auth/logout
-Description: Invalidate the refresh token.
+- Validation Rules:
 
-Input:
+  - refreshToken signature valid.
+  
+  - refreshToken not revoked.
 
-Output (204 No Content)
+- Performance Criteria:
 
-Validation Rules:
+  - 95th percentile response time < 100 ms.
 
-Token exists in DB before revocation.
+#### 1.3.4 POST /api/auth/logout
 
-Performance Criteria:
+- Description: Invalidate the refresh token.
 
-95th percentile response time < 100 ms.
+- Input:
 
-2. Property Management:
+- Output (204 No Content)
 
-2.1 Functional Requirements
-CRUD operations on property listings.
+- Validation Rules:
 
-Support image upload URLs and metadata.
+  - Token exists in DB before revocation.
+  
+- Performance Criteria:
 
-Enable pagination, filtering by location, price, amenities.
+  - 95th percentile response time < 100 ms.
 
-Only owners or admins can modify or delete listings.
+## 2. Property Management:
 
-2.2 Technical Requirements
-RESTful API with JSON payloads.
+### 2.1 Functional Requirements
 
-Database schema: properties, property_images, amenities tables.
+- CRUD operations on property listings.
 
-File storage via S3-compatible service; store URL references.
+- Support image upload URLs and metadata.
 
-RBAC middleware to enforce owner/admin permissions.
+- Enable pagination, filtering by location, price, amenities.
 
-Input payload size limit: 1 MB per request.
+- Only owners or admins can modify or delete listings.
 
-2.3 API Endpoints
-2.3.1 GET /api/properties
-Description: List properties with filters.
+### 2.2 Technical Requirements
 
-Query Parameters:
+- RESTful API with JSON payloads.
 
-Output (200 OK):
+- Database schema:
 
-json
-{
-  "properties": [ { /* property object */ } ],
-  "pagination": {
-    "page": 1,
-    "pageSize": 20,
-    "totalPages": 50,
-    "totalCount": 1000
-  }
-}
-Validation Rules:
+  - properties,
+  
+  - property_images,
+  
+  - amenities tables.
 
-page and pageSize within bounds.
+- File storage via S3-compatible service; store URL references.
 
-minPrice ≤ maxPrice if both provided.
+- RBAC middleware to enforce owner/admin permissions.
 
-Performance Criteria:
+- Input payload size limit: 1 MB per request.
 
-95th percentile response < 250 ms under 200 concurrent users.
+### 2.3 API Endpoints
 
-DB queries use indexed columns on location and price.
+#### 2.3.1 GET /api/properties
 
-2.3.2 POST /api/properties
-Description: Create a new property listing.
+- Description: List properties with filters.
 
-Input:
+- Query Parameters:
 
-Output (201 Created):
+- Output (200 OK):
 
-json
-{
-  "propertyId": "uuid",
-  "ownerId": "uuid",
-  "createdAt": "2025-08-31T22:05:00Z"
-}
-Validation Rules:
+**json**
+**{**
+  **"properties": [ { /* property object */ } ],**
+  **"pagination": {**
+    **"page": 1,**
+    **"pageSize": 20,**
+    **"totalPages": 50,**
+    **"totalCount": 1000**
+  **}**
+**}**
 
-title and description length.
+- Validation Rules:
 
-Coordinates in valid range.
+  - page and pageSize within bounds.
+  
+  - minPrice ≤ maxPrice if both provided.
+  
+- Performance Criteria:
 
-pricePerNight > 0.
+  - 95th percentile response < 250 ms under 200 concurrent users.
+  
+  - DB queries use indexed columns on location and price.
 
-Performance Criteria:
+#### 2.3.2 POST /api/properties
 
-95th percentile response < 200 ms.
+- Description: Create a new property listing.
 
-Support 100 new listings/hour.
+- Input:
 
-2.3.3 PUT /api/properties/{id}
-Description: Update a listing (owner/admin only).
+- Output (201 Created):
 
-Input: same schema as creation (all fields optional except none).
+**json**
+**{**
+  **"propertyId": "uuid",**
+  **"ownerId": "uuid",**
+  **"createdAt": "2025-08-31T22:05:00Z"**
+**}**
 
-Output (200 OK): updated property object.
+- Validation Rules:
 
-Validation & Performance: same as POST.
+  - title and description length.
+  
+  - Coordinates in valid range.
+  
+  - pricePerNight > 0.
+  
+- Performance Criteria:
 
-2.3.4 DELETE /api/properties/{id}
-Description: Remove a listing.
+  - 95th percentile response < 200 ms.
+  
+  - Support 100 new listings/hour.
 
-Output (204 No Content).
+#### 2.3.3 PUT /api/properties/{id}
 
-Validation Rules:
+- Description: Update a listing (owner/admin only).
 
-Property exists and user has permissions.
+- Input: same schema as creation (all fields optional except none).
 
-Performance Criteria:
+- Output (200 OK): updated property object.
 
-95th percentile response < 150 ms.
+- Validation & Performance: same as POST.
 
-3. Booking System:
+#### 2.3.4 DELETE /api/properties/{id}
 
-3.1 Functional Requirements
-Allow authenticated users to create, view, modify, and cancel bookings.
+- Description: Remove a listing.
 
-Prevent overlapping bookings for the same property.
+- Output (204 No Content).
 
-Send email notifications on booking events.
+- Validation Rules:
 
-Calculate total cost including taxes and fees.
+  - Property exists and user has permissions.
+  
+- Performance Criteria:
 
-3.2 Technical Requirements
-Transactional operations with ACID guarantees.
+  - 95th percentile response < 150 ms.
 
-Availability calendar indexed by property and date.
+## 3. Booking System:
 
-Integration with payment gateway (e.g., Stripe).
+### 3.1 Functional Requirements
 
-Asynchronous email dispatch via message queue.
+- Allow authenticated users to create, view, modify, and cancel bookings.
 
-Idempotent booking endpoint to avoid duplicates.
+- Prevent overlapping bookings for the same property.
 
-3.3 API Endpoints
-3.3.1 POST /api/bookings
-Description: Book a property for specified dates.
+- Send email notifications on booking events.
 
-Input:
+- Calculate total cost including taxes and fees.
 
-Output (201 Created):
+### 3.2 Technical Requirements
 
-json
-{
-  "bookingId": "uuid",
-  "status": "CONFIRMED",
-  "totalPrice": 350.00,
-  "currency": "USD",
-  "createdAt": "2025-08-31T22:10:00Z"
-}
-Validation Rules:
+- Transactional operations with ACID guarantees.
 
-startDate < endDate.
+- Availability calendar indexed by property and date.
 
-No existing bookings overlap on propertyId.
+- Integration with payment gateway (e.g., Stripe).
 
-paymentToken valid (gateway auth).
+- Asynchronous email dispatch via message queue.
 
-Performance Criteria:
+- Idempotent booking endpoint to avoid duplicates.
 
-95th percentile response < 250 ms.
+### 3.3 API Endpoints
 
-Handle 100 bookings/minute with concurrency control.
+#### 3.3.1 POST /api/bookings
 
-3.3.2 GET /api/bookings
-Description: List user’s bookings.
+- Description: Book a property for specified dates.
 
-Query Parameters:
+- Input:
 
-Output as array of booking objects.
+- Output (201 Created):
 
-Validation Rules:
+**json**
+**{**
+  **"bookingId": "uuid",**
+  **"status": "CONFIRMED",**
+  **"totalPrice": 350.00,**
+  **"currency": "USD",**
+  **"createdAt": "2025-08-31T22:10:00Z"**
+**}**
 
-userId exists.
+- Validation Rules:
 
-Performance Criteria:
+  - startDate < endDate.
+  
+  - No existing bookings overlap on propertyId.
+  
+  - paymentToken valid (gateway auth).
+  
+- Performance Criteria:
 
-95th percentile response < 200 ms under 50 concurrent users.
+  - 95th percentile response < 250 ms.
+  
+  - Handle 100 bookings/minute with concurrency control.
+  
+#### 3.3.2 GET /api/bookings
 
-3.3.3 PUT /api/bookings/{id}
-Description: Modify dates or cancel (status field).
+- Description: List user’s bookings.
 
-Input:
+- Query Parameters:
 
-Output (200 OK): updated booking object.
+  - Output as array of booking objects.
+  
+- Validation Rules:
 
-Validation Rules:
+  - userId exists.
+  
+- Performance Criteria:
 
-Only future bookings modifiable.
+  - 95th percentile response < 200 ms under 50 concurrent users.
 
-Overlap check on date changes.
+#### 3.3.3 PUT /api/bookings/{id}
 
-Performance Criteria:
+- Description: Modify dates or cancel (status field).
 
-95th percentile response < 200 ms.
+- Input:
 
-3.3.4 DELETE /api/bookings/{id}
-Description: Hard delete or archive booking.
+- Output (200 OK): updated booking object.
 
-Output (204 No Content).
+- Validation Rules:
 
-Validation Rules:
+  - Only future bookings modifiable.
+  
+  - Overlap check on date changes.
 
-Admin only or business rule.
+- Performance Criteria:
 
-Performance Criteria:
+  - 95th percentile response < 200 ms.
 
-95th percentile response < 150 ms.
+#### 3.3.4 DELETE /api/bookings/{id}
+
+- Description: Hard delete or archive booking.
+
+- Output (204 No Content).
+
+- Validation Rules:
+
+  - Admin only or business rule.
+  
+- Performance Criteria:
+
+  - 95th percentile response < 150 ms.

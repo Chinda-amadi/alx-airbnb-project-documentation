@@ -45,10 +45,15 @@ specifications, validation rules, and performance criteria.
 - Output (201 Created):
 
 **json**
+
   {
+
     "userId": "uuid",
+
     "email": "user@example.com",
+
     "createdAt": "2025-08-31T22:00:00Z"
+
   }
 
 - Validation Rules:
